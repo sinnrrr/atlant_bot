@@ -4,13 +4,13 @@ version = "0.1.0"
 description = ""
 authors = ["Dmytro Soltysiuk <dimasoltusyuk@gmail.com>"]
 readme = "README.md"
-packages = [{ include = "atlant_bot" }]
+
 
 [tool.poetry.dependencies]
 python = "^3.11"
 selenium = "^4.14.0"
 webdriver-manager = "^4.0.1"
-python-telegram-bot = {extras = ["job-queue"], version = "^20.6"}
+python-telegram-bot = { extras = ["job-queue"], version = "^20.6" }
 
 
 [build-system]
