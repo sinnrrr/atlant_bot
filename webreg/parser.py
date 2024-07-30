@@ -16,11 +16,8 @@ def get_driver(headless: bool = True) -> WebDriver:
     if headless:
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--disable-infobars")
-        options.add_argument("--disable-gpu")
+        options.add_argument("--remote-debugging-port=9222")
         options.add_argument("--headless")
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option("useAutomationExtension", False)
 
     driver = webdriver.Chrome(
         options=options,
@@ -32,17 +29,20 @@ def get_driver(headless: bool = True) -> WebDriver:
 class Gazovik:
     def __init__(
         self,
-        driver: WebDriver = get_driver(),
         username: str = GAZOVIK_USERNAME,
         password: str = GAZOVIK_PASSWORD,
     ):
-        self.driver = driver
+        self.driver = get_driver()
         self.username = username
         self.password = password
         self._login()
 
-    def _login(self):
-        self.driver.get("https://gazovik.ng-club.com/ua/auth/login")
+    def _login(self, login_url: str = "https://gazovik.ng-club.com/ua/auth/login"):
+        self.driver.get(login_url)
+        if self.driver.current_url != login_url:
+            print("Already logged in")
+            return
+
         form: WebElement = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.ID, "yw0"))
         )
@@ -54,10 +54,12 @@ class Gazovik:
         table: WebElement = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "container_12"))
         )
-        balance = float(
-            table.find_element(
-                By.CSS_SELECTOR,
-                "div:nth-child(8) > div > div > div",
-            ).text
+        el = table.find_element(
+            By.CSS_SELECTOR,
+            "div:nth-child(8) > div > div > div",
         )
+        if not el:
+            print("Couldn't find an element with balance")
+            return
+        balance = float(el.text)
         return balance

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "atlant_bot"
+name = "webreg"
 version = "0.1.0"
 description = ""
 authors = ["Dmytro Soltysiuk <dimasoltusyuk@gmail.com>"]
