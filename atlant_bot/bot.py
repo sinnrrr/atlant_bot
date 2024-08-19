@@ -9,7 +9,7 @@ from telegram.ext import ContextTypes
 from atlant_bot.parser import Gazovik
 from atlant_bot.settings import STORAGE_FILENAME
 
-DAILY_TIME = datetime.time(hour=8, tzinfo=pytz.timezone("Europe/Kiev"))
+DAILY_TIME = datetime.time(hour=7, minute=30, tzinfo=pytz.timezone("Europe/Kiev"))
 DAYS_EFFECTIVE = (1, 2, 3, 4, 5)
 
 
