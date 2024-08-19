@@ -1,0 +1,11 @@
+[Unit]
+Description=Atlant Bot
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/bin/bash -c 'cd /root/atlant_bot && /usr/bin/python -m atlant_bot.main'
+
+[Install]
+WantedBy=multi-user.target

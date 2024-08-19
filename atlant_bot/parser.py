@@ -36,7 +36,7 @@ class Gazovik:
 
     def _login(self):
         self.driver.get("https://gazovik.ng-club.com/ua/auth/login")
-        form: WebElement = WebDriverWait(self.driver, 10).until(
+        form: WebElement = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.ID, "yw0"))
         )
         self.driver.find_element(By.ID, "MFormLogin_login").send_keys(self.username)
@@ -44,7 +44,7 @@ class Gazovik:
         form.submit()
 
     def get_balance(self):
-        table: WebElement = WebDriverWait(self.driver, 10).until(
+        table: WebElement = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.CLASS_NAME, "container_12"))
         )
         balance = float(
