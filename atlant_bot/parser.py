@@ -36,8 +36,13 @@ class Gazovik:
         self.password = password
         self._login()
 
-    def _login(self):
-        self.driver.get("https://gazovik.ng-club.com/ua/auth/login")
+    def _login(self, login_url: str = "https://energyplus.ng-club.com/ua/auth/login"):
+        self.driver.get(login_url)
+        print(self.driver.current_url)
+        if self.driver.current_url != login_url:
+            print("Already logged in")
+            return
+
         form: WebElement = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.ID, "yw0"))
         )
