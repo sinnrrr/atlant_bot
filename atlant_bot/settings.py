@@ -10,3 +10,4 @@ DB_NAME = os.environ["DB_NAME"]
 GAZOVIK_USERNAME = os.environ["GAZOVIK_USERNAME"]
 GAZOVIK_PASSWORD = os.environ["GAZOVIK_PASSWORD"]
 STORAGE_FILENAME = os.environ["STORAGE_FILENAME"]
+LOGIN_URL = "https://energyplus.ng-club.com/ua/auth/login"

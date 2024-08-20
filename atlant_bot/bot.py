@@ -6,13 +6,15 @@ import pytz
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from atlant_bot.parser import Gazovik
-from atlant_bot.settings import STORAGE_FILENAME
+from atlant_bot.driver import Driver
+from atlant_bot.gazovik import Gazovik
+from atlant_bot.settings import GAZOVIK_PASSWORD, GAZOVIK_USERNAME, STORAGE_FILENAME
 
 DAILY_TIME = datetime.time(hour=7, minute=30, tzinfo=pytz.timezone("Europe/Kiev"))
 DAYS_EFFECTIVE = (1, 2, 3, 4, 5)
 
-gazovik = Gazovik()
+driver = Driver(headless=False)
+gazovik = Gazovik(driver, GAZOVIK_USERNAME, GAZOVIK_PASSWORD)
 
 
 def _balance_message(balance: float) -> str:
