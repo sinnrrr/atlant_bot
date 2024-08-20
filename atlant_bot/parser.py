@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import NoSuchWindowException, WebDriverException
 
 from atlant_bot.settings import GAZOVIK_PASSWORD, GAZOVIK_USERNAME
 
@@ -27,18 +28,38 @@ def get_driver(headless: bool = True) -> WebDriver:
 class Gazovik:
     def __init__(
         self,
-        driver: WebDriver = get_driver(),
         username: str = GAZOVIK_USERNAME,
         password: str = GAZOVIK_PASSWORD,
+        headless: bool = True,
     ):
-        self.driver = driver
+        self._driver = None
         self.username = username
         self.password = password
+        self.headless = headless
         self._login()
+
+    @property
+    def driver(self) -> WebDriver:
+        print(self._driver is None, not self._is_session_active())
+        # Check if the driver is already initialized and the session is active
+        if self._driver is None or not self._is_session_active():
+            print("Initializing or reinitializing the WebDriver")
+            self._driver = get_driver(headless=self.headless)
+            self._login()
+        return self._driver
+
+    def _is_session_active(self) -> bool:
+        if self._driver is None:
+            return False
+        try:
+            # A simple command to check if the session is still active
+            self._driver.title
+            return True
+        except (NoSuchWindowException, WebDriverException):
+            return False
 
     def _login(self, login_url: str = "https://energyplus.ng-club.com/ua/auth/login"):
         self.driver.get(login_url)
-        print(self.driver.current_url)
         if self.driver.current_url != login_url:
             print("Already logged in")
             return
@@ -60,4 +81,9 @@ class Gazovik:
                 "div:nth-child(8) > div > div > div",
             ).text
         )
+        print(self._driver)
         return balance
+
+    def quit(self):
+        if self._driver:
+            self._driver.quit()

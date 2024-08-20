@@ -12,13 +12,15 @@ from atlant_bot.settings import STORAGE_FILENAME
 DAILY_TIME = datetime.time(hour=7, minute=30, tzinfo=pytz.timezone("Europe/Kiev"))
 DAYS_EFFECTIVE = (1, 2, 3, 4, 5)
 
+gazovik = Gazovik()
+
 
 def _balance_message(balance: float) -> str:
     return f"Баланс: {balance} грн"
 
 
 async def send_notification_job(context: ContextTypes.DEFAULT_TYPE):
-    balance = Gazovik().get_balance()
+    balance = gazovik.get_balance()
 
     with shelve.open(STORAGE_FILENAME) as db:
         for chat_id in db["subscribed"]:
@@ -34,7 +36,7 @@ async def balance(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_id=update.effective_chat.id, text="Зачекай, будь ласка..."
     )
 
-    balance = Gazovik().get_balance()
+    balance = gazovik.get_balance()
     await context.bot.send_message(
         chat_id=update.effective_chat.id, text=_balance_message(balance)
     )
@@ -95,7 +97,6 @@ async def unsubscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
         raise ValueError("Chat is not set")
 
     with shelve.open(STORAGE_FILENAME) as db:
-        print(db["subscribed"])
         if update.effective_chat.id not in db["subscribed"]:
             await context.bot.send_message(
                 chat_id=update.effective_chat.id,
