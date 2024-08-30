@@ -15,6 +15,7 @@ class Driver:
     def _init_driver(self) -> WebDriver:
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--remote-debugging-pipe")
         if self.headless:
             options.add_argument("--no-sandbox")
             options.add_argument("--headless")
